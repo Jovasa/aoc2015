@@ -39,27 +39,27 @@ fn main() {
         .permutations(towns.len())
         .map(
             |x|
-                x.iter().fold(
-                    (0, ""),
-                    |cur, &next|
-                        {
-                            let (distance_so_far, current) = cur;
-                            if current == "" {
-                                (0, next)
-                            } else {
+                {
+                    let mut temp = x.iter();
+                    let &first = temp.next().unwrap();
+                    temp.fold(
+                        (0, first),
+                        |cur, &next|
+                            {
+                                let (distance_so_far, current) = cur;
                                 let d = &distances[current][next];
                                 (distance_so_far + d, next)
-                            }
-                        },
-                )
+                            },
+                    )
+                }
         )
         // It should be possible to updates these inside the map by changing it to
         // for_each but there is no significant reason to optimize it
         .for_each(
-        |x| {
-            minimum = minimum.min(x.0);
-            maximum = maximum.max(x.0);
-        }
-    );
+            |x| {
+                minimum = minimum.min(x.0);
+                maximum = maximum.max(x.0);
+            }
+        );
     println!("{} {}", minimum, maximum);
 }
