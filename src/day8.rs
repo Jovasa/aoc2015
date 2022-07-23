@@ -11,13 +11,15 @@ fn main() {
 
     for line in reader.lines() {
         let line = line.unwrap();
+        // Replace escaped backslash with forward slash to deal with \\x
+        let temp = line.replace("\\\\", "/");
         let t = escape_patterns
             .iter()
-            .map(|x| line.matches(x).count())
+            .map(|x| temp.matches(x).count())
             .zip(reduce.iter())
             .fold(0, |a,(b, c) | a + b * c);
-        println!("{} {} {}", t + 2, total_score, line);
-        total_score += t + 2;
+
+        total_score += line.len() -(temp.len() - t - 2);
     }
 
     print!("{}\n", total_score)
